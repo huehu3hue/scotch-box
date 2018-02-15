@@ -1,2 +1,5 @@
 .DS_STORE
 .vagrant
+.provisioned_mycnf
+.provisioned_phpini
+.provisioned_defaultvhost
