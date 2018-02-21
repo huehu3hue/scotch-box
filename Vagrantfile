@@ -41,6 +41,10 @@ Vagrant.configure("2") do |config|
     # Just go to https://box.scotch.io/pro
     # Your support will help keep this project alive!
 
+    config.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--cpus", "2"]
+    end
+
     config.vm.box = "scotch/box"
     config.vm.box_version = "1.5.0"
     config.vm.network "private_network", ip: "192.168.33.10"
