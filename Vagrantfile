@@ -25,6 +25,11 @@ if [ ! -d "/var/www/public/www" ]; then
     mkdir /var/www/public/www
 fi
 
+if [ -z $(which htop) ]; then
+    echo "Installing htop"
+    apt-get install htop
+fi
+
 echo Reloading Apache2
 service apache2 reload
 SCRIPT
@@ -43,7 +48,7 @@ Vagrant.configure("2") do |config|
     config.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--cpus", "2"]
     end
-
+    config.vm.box_version = "1.5.0"
     config.vm.box = "scotch/box"
     config.vm.network "private_network", ip: "192.168.33.10"
     config.vm.hostname = "scotchbox"
