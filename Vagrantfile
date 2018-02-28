@@ -20,6 +20,14 @@ if [ ! -f "/var/www/.provisioned_mycnf" ]; then
     touch /var/www/.provisioned_mycnf
 fi
 
+if [ ! -f "/var/www/.provisioned_pluginupdater" ]; then
+    echo Adding plugin updater.
+
+    cp /var/www/pluginupdater.sh /home/vagrant/
+    cp /var/www/.bash_profile /home/vagrant/
+    touch /var/www/.provisioned_pluginupdater
+fi
+
 if [ ! -d "/var/www/public/www" ]; then
     echo Making new www directory in /var/www/public/www
     mkdir /var/www/public/www
@@ -29,6 +37,11 @@ if [ -z $(which htop) ]; then
     echo "Installing htop"
     apt-get install htop
 fi
+
+echo "Updating git (Current version: $(git --version))"
+add-apt-repository ppa:git-core/ppa -y
+apt-get update -y
+apt-get install git -y
 
 echo Setting timezone to Pacific/Auckland
 timedatectl set-timezone Pacific/Auckland
@@ -56,6 +69,12 @@ Vagrant.configure("2") do |config|
     config.vm.network "private_network", ip: "192.168.33.10"
     config.vm.hostname = "scotchbox"
     config.vm.synced_folder ".", "/var/www", :mount_options => ["dmode=777", "fmode=666"]
+
+    # Copy host gitconfig and ssh.
+    config.vm.provision "file", source: "~/.gitconfig", destination: "~/.gitconfig"
+    config.vm.provision "file", source: "~/.gitignore", destination: "~/.gitignore"
+    config.vm.provision "file", source: "~/.ssh", destination: "~/.ssh"
+
     config.vm.provision "shell", inline: $installscript, privileged: true
     
     # Optional NFS. Make sure to remove other synced_folder line too
