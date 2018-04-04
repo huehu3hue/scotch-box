@@ -62,7 +62,7 @@ Vagrant.configure("2") do |config|
     # Your support will help keep this project alive!
 
     config.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--cpus", "2"]
+        vb.customize ["modifyvm", :id, "--cpus", "2", "--memory", "1024"]
     end
     config.vm.box_version = "1.5.0"
     config.vm.box = "scotch/box"
